@@ -1,1 +1,1 @@
-# T1_IA_Maze
+Trabalho da disciplina de inteligência artificial - PUCRS

@@ -3,7 +3,7 @@ import java.util.Random;
 
 public class Maze {
 
-	private String[][] maze = new String[10][10];
+	private String[][] maze;
 	private int[] coins = { 10, 90, 3, 96, 92, 2, 90, 50, 50, 33, 20, 51, 84, 96, 96, 11 };
 //	private int[] coins = { 10, 10, 10, 10, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5 };
 	private int [] coinsPositions = new int[32];
@@ -52,12 +52,13 @@ public class Maze {
 	// Saida: S
 	// Moedas: Numeros
 	// vazio: -
-	public Maze() {
-		init();
-		generateWallsAndChests();
-		generateHoles();
-		generateCoins();
-		this.agent_position = generateAgent();
+	public Maze(String[][] maze) {
+		this.maze = maze;
+//		init();
+//		generateWallsAndChests();
+//		generateHoles();
+//		generateCoins();
+//		this.agent_position = generateAgent();
 		printMaze();
 	}
 
@@ -352,9 +353,7 @@ public class Maze {
 	}
 
 	public void printMaze() {
-		System.out.println("    |0|  |1|  |2|  |3|  |4|  |5|  |6|  |7|  |8|  |9|");
 		for (int i = 0; i < maze.length; i++) {
-			System.out.print("|"+i+"|");
 			for (int j = 0; j < maze[0].length; j++) {
 				System.out.print(maze[i][j]);
 			}

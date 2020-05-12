@@ -4,11 +4,6 @@ package com.company;
 import java.util.Arrays;
 
 public class Node implements Comparable<Node> {
-    /*
-     * para cada vizinha, v� custo da vizinha at� o objetivo, custo da vizinha at� o
-     * inicio(anterior+1), e soma desses dois q gera o custo final. Custo = n�mero
-     * de casas
-     */
 
     private double cost_goal = 0;
     private int cost_initial = 0;
@@ -31,12 +26,6 @@ public class Node implements Comparable<Node> {
         return pos_pai;
     }
 
-    public double getCost_goal() {
-        return cost_goal;
-    }
-
-    public int getCost_initial() {
-        return cost_initial;
     }
 
     public double getCost_final() {

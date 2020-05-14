@@ -26,8 +26,6 @@ public class Node implements Comparable<Node> {
         return pos_pai;
     }
 
-    }
-
     public double getCost_final() {
         return cost_final;
     }

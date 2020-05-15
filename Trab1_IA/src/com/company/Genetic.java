@@ -26,12 +26,13 @@ public class Genetic {
     private static int dropout;
     private static String filename;
     private static final int DIMENSOES = 10;
-    private static final int POPULACAO = 501;
+    private static final int POPULACAO = 201;
     private static int maiorNota;
     private static int melhorAgente;
     private static int segundoMelhorAgente;
     private static int segundaMaiorNota;
     private static String mascara = "1";
+    private static int converge = 0;
 
     static int finalx;
     static int finaly;
@@ -78,18 +79,13 @@ public class Genetic {
             }
         }
 
-        for (int i = 0; i < 300; i++) {
+        for (int i = 0; i < 2500; i++) {
             System.out.println("Calculando aptidao...\n");
             for (int j = 0; j < agentes.length; j++) {
                 notas[j] = aptidao(agentes[j], j);
                 if (notas[j] > maiorNota) {
                     melhorAgente = j;
                     maiorNota = notas[j];
-                }
-                if (concat.contains("SAIDA")
-                        && !concatPath.contains("bateu")
-                        && !concatPath.contains("saiu")) {
-                    break;
                 }
 
                 Scanner scanner = new Scanner(file);
@@ -110,6 +106,9 @@ public class Genetic {
             System.out.println("Criando geracao numero " + (i + 1) + "...");
 
             for (int j = 1; j < agentes.length; j++) {
+                if(notas[j] == notas[0]){
+                    converge++;
+                }
                 Random r1 = new Random();
                 Random r2 = new Random();
 
@@ -156,10 +155,24 @@ public class Genetic {
             System.out.println("Melhor da geracao: ");
 
             printAgente(agentes[0]);
+            aptidao(agentes[0], 0);
+            System.out.println(concatPath);
             System.out.println("Nota : " + notas[0]);
             System.out.println("Posicao : " + melhorAgente);
             System.out.println();
             melhorAgente = 0;
+
+            if (concat.contains("SAIDA")
+                    && !concatPath.contains("bateu")
+                    && !concatPath.contains("saiu")) {
+                System.out.println("Caminho correto");
+                break;
+            }
+            if(converge + 2 > POPULACAO){
+                System.out.println("Convergencia");
+                break;
+            }
+
         }
 
         in.close();
@@ -195,9 +208,7 @@ public class Genetic {
         int currentY = entradaIndexY;
         concat = "Caminho ";
         concatPath = "Celulas ";
-        int caminhoCerto = 0;
-        int caminhoErrado = 0;
-        int[] multi = new int[]{0, caminhoCerto, 0, 0};
+        int[] multi = new int[]{0, 0, 0, 0};
 
         for (int k = 0; k < path.length; k++) {
 
@@ -209,55 +220,35 @@ public class Genetic {
             posS[num] = k;
 
             if (feedback[0] == 0) {
-                multi[0] += 60;
-                multi[1] = caminhoCerto;
-                multi[2] = 0;
-                multi[3] = 0;
-
-//                score -= multi[0];
-                score -= 2;
+                multi[0] += 10;
+                multi[1] = 0;
+                score -= (15 + multi[0]);
                 concat += "| BATEU ";
-//                break;
             } else {
                 if (feedback[0] == 1) {
                     if (verificarCiclo(path, k)) { // VERIFICA SE RETORNA DE ONDE VEIO
-                        multi[0] = caminhoErrado;
+                        multi[0] = 0;
                         multi[1] = 0;
-                        multi[2] += 1;
-                        multi[3] = 0;
-
-                        score -= 5;
+                        score -= 10;
                         concat += "| CICLO ";
                     } else {
-                        multi[0] = caminhoErrado;
+                        multi[0] = 0;
                         multi[1] += 1;
-                        multi[2] = 0;
-                        multi[3] = 0;
-//                        if (multi[1] > 400)
-//                            multi[1] = 400;
-
-//                        score += multi[1];
-                        score += 1;
+                        score += multi[1];
                         concat += "| ANDOU ";
                     }
                 } else {
                     if (feedback[0] == 2) {
                         concat += "| CHEGOU SAIDA \n";
-//                        score += 100;
                         posS[num] = k;
-                        score += (55 - k);
-//                        System.out.println(10*(200 - k));
+                        score += 10*(55 - k);
                         break;
                     } else {
                         if (feedback[0] == -1) {
                             concat += "| SAIU ";
-                            multi[0] = caminhoErrado;
-                            multi[1] = caminhoCerto;
-                            multi[2] = 0;
-                            multi[3] += 60;
-//                            score -= multi[3];//(360 * multi[3]);
-                            score -= 2;
-//                            break;
+                            multi[0] = 0;
+                            multi[1] = 0;
+                            score -= 100;
                         }
                     }
                 }
@@ -670,7 +661,7 @@ public class Genetic {
     private static String[] mutacao(int caminhoSize, String[] path, int num) {
         Random mutacao = new Random();
         Random r1 = new Random();
-        int percent = 2;
+        int percent = 1;
         int a;
         for (int j = 0; j < caminhoSize; j++) {
             if (posS[num] == j)
